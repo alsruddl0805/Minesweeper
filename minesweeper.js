@@ -2,6 +2,7 @@ var tbody = document.querySelector("#table tbody");
 var dataset = [];
 
 document.querySelector("#exec").addEventListener('click',function(){
+    tbody.innerHTML = ""; // 내부 먼저 초기화 후 시작
     var hor = parseInt(document.querySelector("#hor").value);
     var ver = parseInt(document.querySelector("#ver").value);
     var mine = parseInt(document.querySelector("#mine").value);
@@ -35,16 +36,26 @@ document.querySelector("#exec").addEventListener('click',function(){
                 var parentTBODY = e.currentTarget.parentNode.parentNode;
                 var box = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
                 var line = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
-                console.log(parentTR,parentTBODY,box,line);
-                e.currentTarget.textContent = "!";
-                dataset[box][line] = "!";
+                // console.log(parentTR,parentTBODY,box,line);
+                if (e.currentTarget.textContent == '' || e.currentTarget.textContent == 'X') {
+                    e.currentTarget.textContent = "!";
+                } else if (e.currentTarget.textContent == '!') {
+                    e.currentTarget.textContent = "?";
+                } else if (e.currentTarget.textContent == '?') {
+                    if (dataset[box][line] == 1) {
+                        e.currentTarget.textContent = "";
+                    } else if (dataset[box][line] == "X") {
+                        e.currentTarget.textContent = "X";
+
+                    }
+                }
             });
             tr.appendChild(td);
             // td.textContent = 1;
         }
         tbody.appendChild(tr);
     } 
-    console.log(dataset);
+    // console.log(dataset);
 
     // 지뢰 심기
     for (var k=0; k<shuffle.length; k++) { // ex) 랜덤값 = 60 일때
@@ -56,5 +67,10 @@ document.querySelector("#exec").addEventListener('click',function(){
     }
 });
 
-//e.currentTarget
-//e.target
+// currentTarget & target 차이
+// tbody.addEventListener('contextmenu',function(e){
+//     console.log('currentTarget',e.currentTarget);
+//     // currentTarget => eventlistener가 달린 대상 (tbody에 달렸기 때문에 tbody부터 출력)
+//     console.log('target',e.target);
+//     // target => 실제 event가 발생한 대상
+// });
