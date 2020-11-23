@@ -1,3 +1,6 @@
+var tbody = document.querySelector("#table tbody");
+var dataset = [];
+
 document.querySelector("#exec").addEventListener('click',function(){
     var hor = parseInt(document.querySelector("#hor").value);
     var ver = parseInt(document.querySelector("#ver").value);
@@ -18,8 +21,6 @@ document.querySelector("#exec").addEventListener('click',function(){
     console.log(shuffle);
 
     // 지뢰 기본 틀 만들기
-    var dataset = [];
-    var tbody = document.querySelector("#table tbody");
     for(var i=0; i<ver; i+=1) { // tr(세로)를 먼저 만들어야 td(가로)를 넣을 수 있다.
         var arr = [];
         var tr = document.createElement('tr');
@@ -27,6 +28,17 @@ document.querySelector("#exec").addEventListener('click',function(){
         for(var j=0; j<hor; j+=1) {
             arr.push(1);
             var td = document.createElement('td');
+            td.addEventListener('contextmenu',function(e){
+                e.preventDefault();
+                // console.log('오른쪽 클릭');
+                var parentTR = e.currentTarget.parentNode;
+                var parentTBODY = e.currentTarget.parentNode.parentNode;
+                var box = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
+                var line = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
+                console.log(parentTR,parentTBODY,box,line);
+                e.currentTarget.textContent = "!";
+                dataset[box][line] = "!";
+            });
             tr.appendChild(td);
             // td.textContent = 1;
         }
@@ -43,3 +55,6 @@ document.querySelector("#exec").addEventListener('click',function(){
         dataset[verMine][horMine] = "X";
     }
 });
+
+//e.currentTarget
+//e.target
