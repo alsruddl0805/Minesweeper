@@ -42,12 +42,34 @@ document.querySelector("#exec").addEventListener('click',function(){
                 } else if (e.currentTarget.textContent == '!') {
                     e.currentTarget.textContent = "?";
                 } else if (e.currentTarget.textContent == '?') {
-                    if (dataset[box][line] == 1) {
+                    if (dataset[line][box] == 1) {
                         e.currentTarget.textContent = "";
-                    } else if (dataset[box][line] == "X") {
+                    } else if (dataset[line][box] == "X") {
                         e.currentTarget.textContent = "X";
-
                     }
+                }
+            });
+            td.addEventListener('click',function(e){
+                var parentTR = e.currentTarget.parentNode;
+                var parentTBODY = e.currentTarget.parentNode.parentNode;
+                var box = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
+                var line = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
+                if (dataset[line][box] == "X") {
+                    e.currentTarget.textContent = "펑!";
+                } else {
+                    // 주변 지뢰 찾기 후 개수표시
+                    var nearMine = [dataset[line][box-1],dataset[line][box+1],];
+                    
+                    if (dataset[line-1]) {
+                        nearMine = nearMine.concat(dataset[line-1][box-1],dataset[line-1][box],dataset[line-1][box+1]);
+                    } 
+                    if (dataset[line+1]) {
+                        nearMine = nearMine.concat(dataset[line+1][box-1],dataset[line+1][box],dataset[line+1][box+1]);
+                    }
+                    // console.log(nearMine);
+                    e.currentTarget.textContent = nearMine.filter(function(v){
+                        return v == "X";
+                    }).length;
                 }
             });
             tr.appendChild(td);
