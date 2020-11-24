@@ -75,6 +75,35 @@ document.querySelector("#exec").addEventListener('click',function(){
                     var nearMineCnt = nearMine.filter(function(v){
                         return v == "X";
                     }).length;
+                    e.currentTarget.textContent = nearMineCnt;
+                    if (nearMineCnt == 0) {
+                        // 지뢰 주변 8칸 동시 오픈 (재귀함수 사용) 
+                        var nearBox = [];
+                        if (tbody.children[line-1]) {
+                            nearBox = nearBox.concat([
+                                tbody.children[line-1].children[box-1],
+                                tbody.children[line-1].children[box],
+                                tbody.children[line-1].children[box+1]
+                            ]);
+                        }
+                        nearBox = nearBox.concat([
+                            tbody.children[line].children[box-1],
+                            tbody.children[line].children[box+1]
+                        ]);
+                        if (tbody.children[line+1]) {
+                            nearBox = nearBox.concat([
+                                tbody.children[line+1].children[box-1],
+                                tbody.children[line+1].children[box],
+                                tbody.children[line+1].children[box+1]
+                            ]);
+                        }
+                        // 배열에서 undefined,null,빈문자열을 제거하는 코드
+                        nearBox.filter(function(v){
+                            return !!v;
+                        }).forEach(function(sideBox){
+                            sideBox.click();
+                        }); 
+                    }
                 }
             });
             tr.appendChild(td);
@@ -101,3 +130,13 @@ document.querySelector("#exec").addEventListener('click',function(){
 //     console.log('target',e.target);
 //     // target => 실제 event가 발생한 대상
 // });
+
+// 재귀함수 알아보기 - 반복문의 역할 가능
+// function 재귀함수(숫자) {
+//     console.log(숫자);
+//     if (숫자<5) { // 제한을 두어야 한다
+//         재귀함수(숫자+1);
+//     }
+// }
+// 재귀함수(1);
+// *stepoverflow : 재귀함수가 너무 많이 무한반복이 되면 에러나는 사항 
