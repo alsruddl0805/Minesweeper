@@ -31,7 +31,7 @@ document.querySelector("#exec").addEventListener('click',function(){
         var tr = document.createElement('tr');
         dataset.push(arr);
         for(var j=0; j<hor; j+=1) {
-            arr.push(1);
+            arr.push(0);
             var td = document.createElement('td');
             td.addEventListener('contextmenu',function(e){
                 e.preventDefault();
@@ -59,6 +59,7 @@ document.querySelector("#exec").addEventListener('click',function(){
                 var box = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
                 var line = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
                 e.currentTarget.classList.add('opened');
+                dataset[line][box] = 1; // 기본 0인것을 주변칸을 열때는 1로 바꿈
                 if (dataset[line][box] == "X") {
                     e.currentTarget.textContent = "펑!";
                 } else {
@@ -101,7 +102,13 @@ document.querySelector("#exec").addEventListener('click',function(){
                         nearBox.filter(function(v){
                             return !!v;
                         }).forEach(function(sideBox){
-                            sideBox.click();
+                            var parentTR = e.currentTarget.parentNode;
+                            var parentTBODY = e.currentTarget.parentNode.parentNode;
+                            var sideBoxBox = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
+                            var sideBoxLine = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
+                            if (dataset[sideBoxBox][sideBoxLine] != 1) {
+                               sideBox.click();
+                            }
                         }); 
                     }
                 }
