@@ -1,8 +1,12 @@
+// 변수 밖으로 뺀 이유 = SCOPE
 var tbody = document.querySelector("#table tbody");
 var dataset = [];
 
 document.querySelector("#exec").addEventListener('click',function(){
-    tbody.innerHTML = ""; // 내부 먼저 초기화 후 시작
+    // 내부 먼저 초기화 후 시작
+    tbody.innerHTML = "";
+    dataset = [];
+
     var hor = parseInt(document.querySelector("#hor").value);
     var ver = parseInt(document.querySelector("#ver").value);
     var mine = parseInt(document.querySelector("#mine").value);
@@ -54,6 +58,7 @@ document.querySelector("#exec").addEventListener('click',function(){
                 var parentTBODY = e.currentTarget.parentNode.parentNode;
                 var box = Array.prototype.indexOf.call(parentTR.children,e.currentTarget); // 배열이 아닌것들에게도 indexOf 사용 가능
                 var line = Array.prototype.indexOf.call(parentTBODY.children,parentTR);
+                e.currentTarget.classList.add('opened');
                 if (dataset[line][box] == "X") {
                     e.currentTarget.textContent = "펑!";
                 } else {
@@ -67,7 +72,7 @@ document.querySelector("#exec").addEventListener('click',function(){
                         nearMine = nearMine.concat(dataset[line+1][box-1],dataset[line+1][box],dataset[line+1][box+1]);
                     }
                     // console.log(nearMine);
-                    e.currentTarget.textContent = nearMine.filter(function(v){
+                    var nearMineCnt = nearMine.filter(function(v){
                         return v == "X";
                     }).length;
                 }
